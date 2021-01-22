@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 
 // Configuración de las rutas.
 app.use('/songs', routes.song);
+app.use('/listas', routes.lista);
 
 // Inicialización del servidor
 app.listen(process.env.PORT, () =>

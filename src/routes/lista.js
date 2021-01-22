@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import {SongController } from '../controladores/song';
+import {ListaController } from '../controladores/lista';
 
 const router = Router();
 
 router.post('/', );
 
-router.get('/', SongController.todasLasCanciones)
+router.get('/', ListaController.todasLasListas)
 
-router.get('/:id', SongController.cancionPorId);
+router.get('/:id', ListaController.listaPorId);
 
 router.put('/:id', );
 
