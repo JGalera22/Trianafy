@@ -5,10 +5,14 @@ import bodyParser from 'body-parser';
 import morgan from "morgan";
 import morganBody from "morgan-body";
 
+// Imports de componentes del API
 import models from './models';
+import routes from './routes';
 
+// Instanciación de la aplicación de Express
 const app = express();
 
+// Inicialización y configuración de algunos middlewares
 app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
