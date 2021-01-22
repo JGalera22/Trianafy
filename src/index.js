@@ -1,69 +1,50 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-import uuidv4 from 'uuid/v4';
 import bodyParser from 'body-parser';
+import morgan from "morgan";
+import morganBody from "morgan-body";
+
+import models from './models';
 
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'))
+morganBody(app);
 
-/*****************************************************/
-let lists = {
-  1: {
-    listaId: '1',
-    username: 'Claudia Valdivieso',
-  },
-  2: {
-    listaId: '2',
-    username: 'Carlos Zárate',
-  },
-};
 
-let songs = {
-  1: {
-    songId: '1',
-    text: 'Hola Mundo',
-    userId: '1',
-  },
-  2: {
-    songId: '2',
-    text: 'Por el Mundo',
-    userId: '2',
-  },
-};
-
-/*******************************************/
-/*
-app.get('/', (req, res) => {
-  return res.send('Recibió un método GET');
+app.use((req, res, next) => {
+  // Para cualquier petición, añadimos en su contexto
+  req.context = {
+    // Todos los modelos
+    models,
+    // El "usuario actual". Ahora mismo simula que hayamos hecho un login
+    // Más adelante, lo podremos conseguir de otra forma.
+    me: models.songs.songRepository.findById(1)
+  };
+  next();
 });
 
-app.post('/', (req, res) => {
-  return res.send('Recibió un método POST');
-});
+// Configuración de las rutas.
+app.use('/songs', routes.song);
 
-app.put('/', (req, res) => {
-  return res.send('Recibió un método PUT');
-});
-
-app.delete('/', (req, res) => {
-  return res.send('Recibió un método DELETE');
-});
-
+// Inicialización del servidor
 app.listen(process.env.PORT, () =>
   console.log(
     `¡Aplicación de ejemplo escuchando en el puerto ${process.env.PORT}!`
   )
 );
-*/
-/*********************************************************************************/
+
+
+
+/*
 app.post('/lists', (req, res) => {
-  const id = uuidv4();
+  const listaId = uuidv4();
   const list = {
-    id,
+    listaId,
     text: req.body.text,
   };
 
@@ -92,33 +73,32 @@ app.delete('/lists/:listaId', (req, res) => {
   );
 });
 
-/**********************************************************************************/
+
 
 app.post('/songs', (req, res) => {
   return res.send('Añade una nueva canción.');
 });
 
 app.get('/songs', (req, res) => {
-  return res.send('Ver todas las canciones existentes');
+  return res.send(Object.values(songs));
 });
 
-app.get('/songs/:songId', (req, res) => {
-  return res.send('Ver la descripción de una canción seleccionada.');
+app.get('/songs/:{id}', (req, res) => {
+  return res.send(songs[req.params.id]);
 });
 
-app.put('/songs/songId', (req, res) => {
+app.put('/songs/:{id}', (req, res) => {
   return res.send(
-    `Modificar el contenido de una canción (salvo el id, que no se puede modificar)/${req.params.songId}`,
+    `Modificar el contenido de una canción (salvo el id, que no se puede modificar)/${req.params.id}`,
   );
 });
 
-app.delete('/songs/songId', (req, res) => {
+app.delete('/songs/:{id}', (req, res) => {
   return res.send(
     `Borrar una canción./${req.params.songId}`,
   );
 });
-
-/**********************************************************************************/
+*/
 
 console.log("Hola 👋 Node.js.");
 console.log(process.env.MI_PASSWORD);
