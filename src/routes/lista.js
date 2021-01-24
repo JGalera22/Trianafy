@@ -3,15 +3,15 @@ import {ListaController } from '../controladores/lista';
 
 const router = Router();
 
-router.post('/', );
-
 router.get('/', ListaController.todasLasListas)
 
 router.get('/:id', ListaController.listaPorId);
 
-router.put('/:id', );
+router.post('/', ListaController.nuevaLista);
 
-router.delete('/:id', );
+router.put('/:id', ListaController.editarLista);
+
+router.delete('/:id', ListaController.eliminarLista);
 
 
 
