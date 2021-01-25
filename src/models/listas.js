@@ -1,19 +1,23 @@
-import { songs } from './songs';
+import { Song, songs } from './songs';
 
 class Lista {
 
-    constructor(id, name, description, userId, songs) {
+    constructor(id, name, description, userId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.userId = userId;
-        this.songs = songs;
+        this.songs = canciones;
 
     }
 }
+let canciones = [
+    new Song(1, 'Believer', 'Imagine Dragon', 'Album 2017', 2017),
+    new Song(2, 'Thunder', 'Imagine Dragon', 'Album 2017', 2017),
+]
 let listas = [
-    new Lista(1, 'moderna', 'Música moderna',1 , songs),
-    new Lista(2, 'medieval', 'Música medieval', 2, songs),
+    new Lista(1, 'moderna', 'Música moderna',1 , canciones),
+    new Lista(2, 'medieval', 'Música medieval', 2, canciones),
 ]
 
 const indexOfPorId = (id) => {

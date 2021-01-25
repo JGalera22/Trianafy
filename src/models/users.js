@@ -47,7 +47,7 @@ const userRepository = {
     create(newUser) {
         const lastId = users.length == 0 ? 0 : users[users.length-1].id;
         const newId = lastId + 1;
-        const result = new User(newId, newUser.username);
+        const result = new User(newId, newUser.username, newUser.name, newUser.email, newUser.password);
         users.push(result);
         return result;
     },
@@ -67,12 +67,19 @@ const userRepository = {
         const posicionEncontrado = indexOfPorId(id);
         if (posicionEncontrado != -1)
             users.splice(posicionEncontrado, 1);
-    }
+    },
 
+}
+
+// Comprobar si un email ya está registrado como parte de un usuario
+const emailExists = (email) => {
+    let emails = users.map(user => user.email);
+    return emails.includes(email);
 }
 
 
 export  {
     User,
-    userRepository
+    userRepository,
+    emailExists
 }

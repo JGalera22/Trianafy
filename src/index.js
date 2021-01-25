@@ -44,68 +44,6 @@ app.listen(process.env.PORT, () =>
   )
 );
 
-
-
-/*
-app.post('/lists', (req, res) => {
-  const listaId = uuidv4();
-  const list = {
-    listaId,
-    text: req.body.text,
-  };
-
-  lists[id] = list;
-
-  return res.send(list);
-});
-
-app.get('/lists', (req, res) => {
-  return res.send(Object.values(lists));
-});
-
-app.get('/lists/:listaId', (req, res) => {
-  return res.send(lists[req.params.listaId]);
-});
-
-app.put('/lists/:listaId', (req, res) => {
-  return res.send(
-    `Modificar el contenido de una lista de reproducción (salvo el id, que no se puede modificar)/${req.params.listaId}`,
-  );
-});
-
-app.delete('/lists/:listaId', (req, res) => {
-  return res.send(
-    `Borrar una lista de reproducción./${req.params.listaId}`,
-  );
-});
-
-
-
-app.post('/songs', (req, res) => {
-  return res.send('Añade una nueva canción.');
-});
-
-app.get('/songs', (req, res) => {
-  return res.send(Object.values(songs));
-});
-
-app.get('/songs/:{id}', (req, res) => {
-  return res.send(songs[req.params.id]);
-});
-
-app.put('/songs/:{id}', (req, res) => {
-  return res.send(
-    `Modificar el contenido de una canción (salvo el id, que no se puede modificar)/${req.params.id}`,
-  );
-});
-
-app.delete('/songs/:{id}', (req, res) => {
-  return res.send(
-    `Borrar una canción./${req.params.songId}`,
-  );
-});
-*/
-
 console.log("Hola 👋 Node.js.");
 console.log(process.env.MI_PASSWORD);
 console.log(process.env.PORT);
