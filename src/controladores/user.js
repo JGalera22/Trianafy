@@ -22,14 +22,14 @@ const UserController = {
     },
 
     nuevoUsuario : (req, res) => {
-        let usuarioCreado = userRepository.create(new User(undefined, req.body.username, req.body.name, 
+        let usuarioCreado = userRepository.create(new User(undefined, req.body.username, req.body.fullname, 
             req.body.email, req.body.password));
         res.status(201).json(usuarioCreado);
     },
 
     editarUsuario: (req, res) => {
         let usuarioModificado = userRepository.updateById(req.params.id, new User(undefined, req.body.username, 
-            req.body.name, req.body.email, req.body.password));
+            req.body.fullname, req.body.email, req.body.password));
         if (usuarioModificado == undefined)
             res.sendStatus(404);
         else   

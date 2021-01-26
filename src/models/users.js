@@ -1,9 +1,12 @@
+import "dotenv/config";
+import bcrypt from 'bcryptjs';
+
 class User {
 
-    constructor(id, username, name, email, password) {
+    constructor(id = 0, username, fullname, email, password) {
         this.id = id;
         this.username = username;
-        this.name = name;
+        this.fullname = fullname;
         this.email = email;
         this.password = password;
     }
@@ -11,14 +14,13 @@ class User {
 
 }
 
+const password = bcrypt.hashSync('12345678', parseInt(process.env.BCRYPT_ROUNDS));
+
 let users = [
-    new User(1, 'Luismi', 'Luis Miguel López', 'luismi@salesianos.edu', 1234),
-    new User(2, 'Angel', 'Ángel Naranjo', 'angel@salesianos.edu', 1234)
+    new User(1, 'Luismi', 'Luis Miguel López', 'luismi@salesianos.edu', password),
+    new User(2, 'Angel', 'Ángel Naranjo', 'angel@salesianos.edu', password)
 ];
 
-// Método que nos va a permitir obtener la posición de un
-// usuario dentro de la colección en base a su ID
-// Devuelve la posición si lo encuentra, y -1 si no lo encuentra.
 const indexOfPorId = (id) => {
     let posicionEncontrado = -1;
     for (let i = 0; i < users.length && posicionEncontrado == -1; i++) {
@@ -26,6 +28,18 @@ const indexOfPorId = (id) => {
             posicionEncontrado = i;
     }
     return posicionEncontrado;
+}
+
+//Función que comprueba si un username ya está definido como el username de un usuario en el repositorio
+const usernameExists = (username) => {
+    let usernames = users.map(user => user.username);
+    return usernames.includes(username);
+}
+
+// Comprobar si un email ya está registrado como parte de un usuario
+const emailExists = (email) => {
+    let emails = users.map(user => user.email);
+    return emails.includes(email);
 }
 
 const userRepository = {
@@ -36,10 +50,6 @@ const userRepository = {
     },
     // Devuelve un usuario por su Id
     findById(id) {
-        /*
-        let result = users.filter(user => user.id == id);
-        return Array.isArray(result) && result.length > 0 ? result[0] : undefined;
-        */
        const posicion = indexOfPorId(id);
        return posicion == -1 ? undefined : users[posicion];
     },
@@ -47,7 +57,7 @@ const userRepository = {
     create(newUser) {
         const lastId = users.length == 0 ? 0 : users[users.length-1].id;
         const newId = lastId + 1;
-        const result = new User(newId, newUser.username, newUser.name, newUser.email, newUser.password);
+        const result = new User(newId, newUser.username, newUser.fullname, newUser.email, newUser.password);
         users.push(result);
         return result;
     },
@@ -68,18 +78,16 @@ const userRepository = {
         if (posicionEncontrado != -1)
             users.splice(posicionEncontrado, 1);
     },
+    findByUsername(username) {
+        let result = users.filter(user => user.username == username);
+        return Array.isArray(result) && result.length > 0 ? result[0] : undefined;   
+    }
 
 }
-
-// Comprobar si un email ya está registrado como parte de un usuario
-const emailExists = (email) => {
-    let emails = users.map(user => user.email);
-    return emails.includes(email);
-}
-
 
 export  {
     User,
     userRepository,
-    emailExists
+    emailExists,
+    usernameExists
 }

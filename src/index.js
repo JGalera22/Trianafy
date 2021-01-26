@@ -4,6 +4,7 @@ import express from "express";
 import bodyParser from 'body-parser';
 import morgan from "morgan";
 import morganBody from "morgan-body";
+import passport from './services/passport';
 
 // Imports de componentes del API
 import models from './models';
@@ -44,7 +45,10 @@ app.listen(process.env.PORT, () =>
   )
 );
 
+// Inicialización de passport
+app.use(passport.initialize());
+
 console.log("Hola 👋 Node.js.");
-console.log(process.env.MI_PASSWORD);
+//console.log(process.env.MI_PASSWORD);
 console.log(process.env.PORT);
 
