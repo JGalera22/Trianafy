@@ -9,26 +9,16 @@ router.get('/', UserController.todosLosUsuarios)
 
 router.get('/me', UserController.me);
 
-//router.get('/:id', UserController.usuarioPorId);
 router.get('/:id', [
     param('id').isInt().withMessage('ID debe ser un número entero')
 ],
 validar,
 UserController.usuarioPorId);
 
-//router.post('/', UserController.nuevoUsuario);
-
-/* Sin comprobar si tiene correo repetido
 router.post('/', [
     body('username').isLength({min: 5}).withMessage('La longitud mínima del nombre de usuario son 5 caracteres'),
-    body('email').isEmail().withMessage('El campo email debe ser un email válido'),
-    body('id').not().exists().withMessage('No es necesario que proporcione un ID; este se asignará automáticamente')
-],
-validar, 
-UserController.nuevoUsuario);
-*/
-router.post('/', [
-    body('username').isLength({min: 5}).withMessage('La longitud mínima del nombre de usuario son 5 caracteres'),
+    body('name').isLength({min: 5}).withMessage('La longitud mínima del nombre completo son 5 caracteres'),
+    body('password').isLength({min: 8}).withMessage('La longitud mínima de la contraseña son 8 caracteres'),
     body('email').isEmail().withMessage('El campo email debe ser un email válido').custom(email => {
             if(emailExists(email)) {
                 throw new Error('El email ya está registrado. Proporcione un valor diferente');
@@ -41,8 +31,16 @@ router.post('/', [
 validar, 
 UserController.nuevoUsuario);
 
-router.put('/:id', UserController.editarUsuario);
+router.put('/:id', [
+    param('id').isInt().withMessage('ID debe ser un número entero')
+],
+validar,
+UserController.editarUsuario);
 
-router.delete('/:id', UserController.eliminarUsuario);
+router.delete('/:id', [
+    param('id').isInt().withMessage('ID debe ser un número entero')
+],
+validar,
+UserController.eliminarUsuario);
 
 export default router;
