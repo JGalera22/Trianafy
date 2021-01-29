@@ -1,93 +1,85 @@
-import "dotenv/config";
+import 'dotenv/config';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
-class User {
+const userSchema = new Schema({
+    username: String,
+    fullname: String,
+    email: String,
+    password: String,
+    _id: Schema.Types.ObjectId,
+});
 
-    constructor(id = 0, username, fullname, email, password) {
-        this.id = id;
-        this.username = username;
-        this.fullname = fullname;
-        this.email = email;
-        this.password = password;
-    }
+const User = mongoose.model('User', userSchema);
 
+/**
+ * Función que comprueba si un email ya está
+ * definido como el email de un usuario en el repositorio
+ */
+const emailExists = async (email) => {
+    const result = await User.countDocuments({ email: email }).exec();
+    return result > 0;
 
 }
 
-const password = bcrypt.hashSync('12345678', parseInt(process.env.BCRYPT_ROUNDS));
-
-let users = [
-    new User(1, 'Luismi', 'Luis Miguel López', 'luismi@salesianos.edu', password),
-    new User(2, 'Angel', 'Ángel Naranjo', 'angel@salesianos.edu', password)
-];
-
-const indexOfPorId = (id) => {
-    let posicionEncontrado = -1;
-    for (let i = 0; i < users.length && posicionEncontrado == -1; i++) {
-        if (users[i].id == id)
-            posicionEncontrado = i;
-    }
-    return posicionEncontrado;
-}
-
-//Función que comprueba si un username ya está definido como el username de un usuario en el repositorio
+/**
+ * Función que comprueba si un username ya está
+ * definido como el username de un usuario en el repositorio
+ */
+/*
 const usernameExists = (username) => {
     let usernames = users.map(user => user.username);
     return usernames.includes(username);
-}
-
-// Comprobar si un email ya está registrado como parte de un usuario
-const emailExists = (email) => {
-    let emails = users.map(user => user.email);
-    return emails.includes(email);
-}
+}*/
 
 const userRepository = {
 
     // Devuelve todos los usuarios del repositorio
-    findAll() {
-        return users;
-    },
-    // Devuelve un usuario por su Id
-    findById(id) {
-       const posicion = indexOfPorId(id);
-       return posicion == -1 ? undefined : users[posicion];
-    },
-    // Inserta un nuevo usuario y devuelve el usuario insertado
-    create(newUser) {
-        const lastId = users.length == 0 ? 0 : users[users.length-1].id;
-        const newId = lastId + 1;
-        const result = new User(newId, newUser.username, newUser.fullname, newUser.email, newUser.password);
-        users.push(result);
+    async findAll() {
+        const result =  await User.find({}).exec();
         return result;
     },
+    // Devuelve un usuario por su Id
+    async findById(id) {
+       const result = await User.findById(id).exec();
+       return result != null ? result : undefined;
+    },
+    // Inserta un nuevo usuario y devuelve el usuario insertado
+    async create(newUser) {
+        const theUser = new User({
+            username : newUser.username,
+            email: newUser.email
+        });
+        const result = await theUser.save();
+        return result; // Posiblemente aquí nos interese implementar un DTO
+
+    },
     // Actualiza un usuario identificado por su ID
-    updateById(id, modifiedUser) {
-        const posicionEncontrado = indexOfPorId(id)
-        if (posicionEncontrado != -1) {
-            users[posicionEncontrado].username = modifiedUser.username;
-        }
-        return posicionEncontrado != -1 ? users[posicionEncontrado] : undefined;
+    async updateById(id, modifiedUser) {
+        const userSaved = await User.findById(id);
+
+        if (userSaved != null) {
+            return await Object.assign(userSaved, modifiedUser).save();
+        } else
+            return undefined;
+
+
     },
     // Versión del anterior, en la que el ID va dentro del objeto usuario
     update(modifiedUser) {
         return this.update(modifiedUser.id, modifiedUser);
     }, 
-    delete(id) {
-        const posicionEncontrado = indexOfPorId(id);
-        if (posicionEncontrado != -1)
-            users.splice(posicionEncontrado, 1);
-    },
-    findByUsername(username) {
-        let result = users.filter(user => user.username == username);
-        return Array.isArray(result) && result.length > 0 ? result[0] : undefined;   
+
+    async delete(id) {
+        await User.findByIdAndRemove(id).exec();
     }
 
 }
 
+
 export  {
     User,
     userRepository,
-    emailExists,
-    usernameExists
+    emailExists
 }

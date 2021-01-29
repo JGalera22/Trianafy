@@ -55,7 +55,6 @@ export const password = () => (req, res, next) =>
         else if (err || !user)
             return res.status(401).end()
 
-
         req.logIn(user, { session: false }, (err) => {
             if (err) return res.status(401).end()
             next()

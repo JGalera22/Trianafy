@@ -1,5 +1,24 @@
-import { Song, songs } from './songs';
+import 'dotenv/config';
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
+const listaSchema = new Schema({
+    _id: Schema.Types.ObjectId,
+    name: String,
+    description: String,
+    user_id:{
+        type: mongoose.ObjectId,
+        ref: 'User'
+    },
+    songs: [{
+        type: mongoose.ObjectId,
+        ref: 'Song'
+    }]
+});
+
+const Lista = mongoose.model('Lista', listaSchema);
+
+/*
 class Lista {
 
     constructor(id, name, description, userId) {
@@ -19,6 +38,7 @@ let listas = [
     new Lista(1, 'moderna', 'Música moderna',1 , canciones),
     new Lista(2, 'medieval', 'Música medieval', 2, canciones),
 ]
+*/
 
 const indexOfPorId = (id) => {
     let posicionEncontrado = -1;

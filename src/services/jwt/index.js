@@ -13,7 +13,7 @@ export const JwtService = {
                     })
     
     ,
-    
+
     verify: (token) => jwt.verify(token, secret)
 
     

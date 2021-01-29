@@ -1,3 +1,18 @@
+import 'dotenv/config';
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
+
+const songSchema = new Schema({
+    title: String,
+    artist: String,
+    album: String,
+    year: String,
+    _id: Schema.Types.ObjectId,
+});
+
+const Song = mongoose.model('Song', songSchema);
+
+/*
 class Song {
 
     constructor(id, title, artist, album, year) {
@@ -14,6 +29,7 @@ let songs = [
     new Song(2, 'Thunder', 'Imagine Dragon', 'Album 2017', 2017),
 ]
 
+
 const indexOfPorId = (id) => {
     let posicionEncontrado = -1;
     for (let i = 0; i < songs.length && posicionEncontrado == -1; i++) {
@@ -22,42 +38,48 @@ const indexOfPorId = (id) => {
     }
     return posicionEncontrado;
 }
-
+*/
 const songRepository = {
 
-    findAll() {
-        return songs;
+    async findAll() {
+        const result =  await Song.find({}).exec();
+        return result;
     },
     // Método que nos va a permitir obtener la posición de una
     // canción dentro de la colección en base a su ID
     // Devuelve la posición si la encuentra, y -1 si no la encuentra.
-    findById(id) {
-       const posicion = indexOfPorId(id);
-       return posicion == -1 ? undefined : songs[posicion];
-    },
+
+    async findById(id) {
+        const result = await Song.findById(id).exec();
+        return result != null ? result : undefined;
+     },
 
     // Inserta una nueva canción y devuelve la canción insertada
-    create(newSong) {
-        const lastId = songs.length == 0 ? 0 : songs[songs.length-1].id;
-        const newId = lastId + 1;
-        const result = new Song(newId, newSong.tittle, newSong.artist, newSong.album, newSong.year);
-        songs.push(result);
+
+    async create(newSong) {
+        const theSong = new Song({
+            title : newSong.title,
+            artist: newSong.artist,
+            album:newSong.album,
+            year: newSong.year 
+        });
+        const result = await theSong.save();
         return result;
     },
     // Actualiza una canción identificada por su ID
-    updateById(id, modifiedSong) {
-        const posicionEncontrado = indexOfPorId(id)
-        if (posicionEncontrado != -1) {
-            songs[posicionEncontrado].title = modifiedSong.title;
-        }
-        return posicionEncontrado != -1 ? songs[posicionEncontrado] : undefined;
+
+    async updateById(id, modifiedSong) {
+        const songSaved = await Song.findById(id);
+
+        if (songSaved != null) {
+            return await Object.assign(songSaved, modifiedSong).save();
+        } else
+            return undefined;
     },
 
     // Borrar una canción por su ID
-    delete(id) {
-        const posicionEncontrado = indexOfPorId(id);
-        if (posicionEncontrado != -1)
-            songs.splice(posicionEncontrado, 1);
+    async delete(id) {
+        await Song.findByIdAndRemove(id).exec();
     }
 
 }

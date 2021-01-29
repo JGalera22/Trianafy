@@ -3,12 +3,17 @@ import { Song, songRepository } from '../models/songs';
 
 const SongController = {
 
-    todasLasCanciones : (req, res) => {
-        res.json(songRepository.findAll());
+    todasLasCanciones : async (req, res) => {
+        const data = await songRepository.findAll();
+        if (Array.isArray(data) && data.length > 0) 
+            res.json(data);
+        else
+            res.sendStatus(404);
     },
 
-    cancionPorId : (req, res) => {
-        let song = songRepository.findById(req.params.id);
+
+    cancionPorId : async (req, res) => {
+        let song = await songRepository.findById(req.params.id);
         if (song != undefined) {
             res.json(song);
         } else {
@@ -17,23 +22,28 @@ const SongController = {
         
     },
 
-    nuevaCancion : (req, res) => {
-        let cancionCreada = songRepository.create(new Song(undefined, 
-            req.body.title, req.body.artist, req.body.album, req.body.year));
+    nuevaCancion : async (req, res) => {
+        let cancionCreada = await songRepository.create(
+            {
+                title: req.body.title, artist: req.body.artist, 
+                album: req.body.album, year: req.body.year
+            });
         res.status(201).json(cancionCreada);
     },
 
-    editarCancion: (req, res) => {
-        let cancionModificada = songRepository.updateById(req.params.id, new Song(undefined, 
-            req.body.title, req.body.artist, req.body.album, req.body.year));
-        if (cancionModificada == undefined)
+    editarCancion: async (req, res) => {
+        let cancionModificada = await songRepository.updateById(req.params.id, {
+            title: req.body.title, artist: req.body.artist,
+            album: req.body.album,year: req.body.year
+        });
+            if (cancionModificada == undefined)
             res.sendStatus(404);
         else   
             res.status(200).json(cancionModificada);
     },
 
-    eliminarCancion: (req, res) => {
-        songRepository.delete(req.params.id);
+    eliminarCancion: async (req, res) => {
+        await songRepository.delete(req.params.id);
         res.sendStatus(204);
     }
 

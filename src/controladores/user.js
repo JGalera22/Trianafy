@@ -1,14 +1,18 @@
-import { User, userRepository } from '../models/users';
+import { User, userRepository} from '../models/users';
+import { body, validationResult } from 'express-validator';
 
 const UserController = {
 
-    todosLosUsuarios : (req, res) => {
-        res.json(userRepository.findAll());
+    todosLosUsuarios: async (req, res) => {
+        const data = await userRepository.findAll();
+        if (Array.isArray(data) && data.length > 0) 
+            res.json(data);
+        else
+            res.sendStatus(404);
     },
 
-    usuarioPorId: (req, res) => {
-
-            let user = userRepository.findById(req.params.id);
+    usuarioPorId: async (req, res) => {
+            let user = await userRepository.findById(req.params.id);
             if (user != undefined) {
                 res.json(user);
             } else {
@@ -17,27 +21,26 @@ const UserController = {
 
     },
 
-    me : (req, res) => {
-        res.json(req.context.me);
-    },
-
-    nuevoUsuario : (req, res) => {
-        let usuarioCreado = userRepository.create(new User(undefined, req.body.username, req.body.fullname, 
-            req.body.email, req.body.password));
+    nuevoUsuario: async (req, res) => {
+        let usuarioCreado = await userRepository.create({
+            username: req.body.username,
+            email: req.body.email
+        })
         res.status(201).json(usuarioCreado);
     },
 
-    editarUsuario: (req, res) => {
-        let usuarioModificado = userRepository.updateById(req.params.id, new User(undefined, req.body.username, 
-            req.body.fullname, req.body.email, req.body.password));
+    editarUsuario: async (req, res) => {
+        let usuarioModificado = await userRepository.updateById(req.params.id, {
+            username: req.body.username
+        });
         if (usuarioModificado == undefined)
             res.sendStatus(404);
-        else   
+        else
             res.status(200).json(usuarioModificado);
     },
 
-    eliminarUsuario: (req, res) => {
-        userRepository.delete(req.params.id);
+    eliminarUsuario: async (req, res) => {
+        await userRepository.delete(req.params.id);
         res.sendStatus(204);
     }
 
@@ -46,6 +49,6 @@ const UserController = {
 
 
 
-export  {
+export {
     UserController
 }
