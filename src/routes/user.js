@@ -9,27 +9,19 @@ const router = Router();
 router.get('/', UserController.todosLosUsuarios)
 
 
-router.get('/:id',UserController.usuarioPorId);
-/*
-router.post('/', [
-    body('username').isLength({min: 5}).withMessage('La longitud mínima del nombre de usuario son 5 caracteres'),
-    body('fullname').exists(),
-    body('password').isLength({min: 8}).withMessage('La longitud mínima de la contraseña son 8 caracteres'),
-    body('email').isEmail().withMessage('El campo email debe ser un email válido').custom(async email => {
-        if(await emailExists(email)) {
-            throw new Error('El email ya está registrado. Proporcione un valor diferente');
-        } else {  
-            return true;
-        }
-    }),
-    body('id').not().exists().withMessage('No es necesario que proporcione un ID; este se asignará automáticamente')
-],
-validar, 
-UserController.nuevoUsuario);
+router.get('/:id',[
+    param('id').isString().withMessage('ID debe ser un string')
+], validar,
+UserController.usuarioPorId);
 
-*/
-router.put('/:id', UserController.editarUsuario);
+router.put('/:id',[
+    param('id').isString().withMessage('ID debe ser un string')
+], validar,
+ UserController.editarUsuario);
 
-router.delete('/:id',UserController.eliminarUsuario);
+router.delete('/:id',[
+    param('id').isString().withMessage('ID debe ser un string')
+], validar,
+UserController.eliminarUsuario);
 
 export default router;

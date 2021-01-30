@@ -8,7 +8,10 @@ const router = Router();
 
 router.get('/', SongController.todasLasCanciones)
 
-router.get('/:id',SongController.cancionPorId);
+router.get('/:id',[
+    param('id').isString().withMessage('ID debe ser un string')
+], validar,
+SongController.cancionPorId);
 
 router.post('/', [
     body('title').exists().withMessage('Debe proporcionarse un título'),
@@ -19,9 +22,15 @@ router.post('/', [
 validar,// token(),
 SongController.nuevaCancion);
 
-router.put('/:id', SongController.editarCancion);
+router.put('/:id', [
+    param('id').isString().withMessage('ID debe ser un string')
+], validar,
+ SongController.editarCancion);
 
-router.delete('/:id',SongController.eliminarCancion);
+router.delete('/:id',[
+    param('id').isString().withMessage('ID debe ser un string')
+], validar,
+SongController.eliminarCancion);
 
 
 

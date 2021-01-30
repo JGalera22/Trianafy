@@ -18,69 +18,58 @@ const listaSchema = new Schema({
 
 const Lista = mongoose.model('Lista', listaSchema);
 
-/*
-class Lista {
 
-    constructor(id, name, description, userId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.userId = userId;
-        this.songs = canciones;
-
-    }
-}
-let canciones = [
-    new Song(1, 'Believer', 'Imagine Dragon', 'Album 2017', 2017),
-    new Song(2, 'Thunder', 'Imagine Dragon', 'Album 2017', 2017),
-]
-let listas = [
-    new Lista(1, 'moderna', 'Música moderna',1 , canciones),
-    new Lista(2, 'medieval', 'Música medieval', 2, canciones),
-]
-*/
-
-const indexOfPorId = (id) => {
-    let posicionEncontrado = -1;
-    for (let i = 0; i < listas.length && posicionEncontrado == -1; i++) {
-        if (listas[i].id == id)
-            posicionEncontrado = i;
-    }
-    return posicionEncontrado;
-}
 
 const listaRepository = {
 
-    findAll() {
-        return listas;
+
+    async findAll() {
+        return await Lista
+            .find()
+            .populate('lista', 'name')
+            .populate('songs', 'title')
+            .exec();
     },
-    findById(id) {
-        const posicion = indexOfPorId(id);
-        return posicion == -1 ? undefined : listas[posicion];
-     },
+
+     async findById(_id) {
+        return await Lista
+            .findById(_id)
+            .populate('lista')
+            .populate('songs')
+            .exec();
+    },
  
 
-     create(newLista) {
-         const lastId = listas.length == 0 ? 0 : listas[listas.length-1].id;
-         const newId = lastId + 1;
-         const result = new Lista(newId, newLista.name, newLista.description, newLista.userId, newLista.songs);
-         listas.push(result);
-         return result;
+    async create(newLista) {
+         const theLista = new Lista({
+            _id : new mongoose.Types.ObjectId(),
+            name : newLista.name,
+            description: newLista.description,
+            user_id: newLista.user_id,
+            songs: newLista.songs
+        });
+        const result = await theLista.save();
+        return result;
      },
 
-     updateById(id, modifiedLista) {
-         const posicionEncontrado = indexOfPorId(id)
-         if (posicionEncontrado != -1) {
-            listas[posicionEncontrado].name = modifiedLista.name;
-         }
-         return posicionEncontrado != -1 ? listas[posicionEncontrado] : undefined;
-     },
- 
-     delete(id) {
-         const posicionEncontrado = indexOfPorId(id);
-         if (posicionEncontrado != -1)
-             listas.splice(posicionEncontrado, 1);
-     }
+    async updateById(id, modifiedLista) {
+        const listaSaved = await Lista.findById(id);
+
+        if (listaSaved != null) {
+            return await Object.assign(listaSaved, modifiedLista).save();
+        } else
+            return undefined;
+
+
+    },
+
+    update(modifiedLista) {
+        return this.update(modifiedLista.id, modifiedLista);
+    }, 
+
+    async delete(id) {
+        await Lista.findByIdAndRemove(id).exec();
+    }
 
 }    
 

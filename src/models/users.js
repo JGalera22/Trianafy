@@ -42,7 +42,7 @@ const userRepository = {
             email: newUser.email
         });
         const result = await theUser.save();
-        return result; // Posiblemente aquí nos interese implementar un DTO
+        return result; 
 
     },
     // Actualiza un usuario identificado por su ID

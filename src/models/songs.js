@@ -23,8 +23,8 @@ const songRepository = {
     // canción dentro de la colección en base a su ID
     // Devuelve la posición si la encuentra, y -1 si no la encuentra.
 
-    async findById(id) {
-        const result = await Song.findById(id).exec();
+    async findById(_id) {
+        const result = await Song.findById(_id).exec();
         return result != null ? result : undefined;
      },
 
