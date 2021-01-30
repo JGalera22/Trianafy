@@ -4,11 +4,11 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+    _id: Schema.Types.ObjectId,
     username: String,
     fullname: String,
     email: String,
-    password: String,
-    _id: Schema.Types.ObjectId,
+    password: String
 });
 
 const User = mongoose.model('User', userSchema);
@@ -22,16 +22,6 @@ const emailExists = async (email) => {
     return result > 0;
 
 }
-
-/**
- * Función que comprueba si un username ya está
- * definido como el username de un usuario en el repositorio
- */
-/*
-const usernameExists = (username) => {
-    let usernames = users.map(user => user.username);
-    return usernames.includes(username);
-}*/
 
 const userRepository = {
 

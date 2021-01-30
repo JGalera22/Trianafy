@@ -3,42 +3,16 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const songSchema = new Schema({
+    _id: Schema.Types.ObjectId,
     title: String,
     artist: String,
     album: String,
-    year: String,
-    _id: Schema.Types.ObjectId,
+    year: String
+    
 });
 
 const Song = mongoose.model('Song', songSchema);
 
-/*
-class Song {
-
-    constructor(id, title, artist, album, year) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-        this.album = album;
-        this.year = year;
-
-    }
-}
-let songs = [
-    new Song(1, 'Believer', 'Imagine Dragon', 'Album 2017', 2017),
-    new Song(2, 'Thunder', 'Imagine Dragon', 'Album 2017', 2017),
-]
-
-
-const indexOfPorId = (id) => {
-    let posicionEncontrado = -1;
-    for (let i = 0; i < songs.length && posicionEncontrado == -1; i++) {
-        if (songs[i].id == id)
-            posicionEncontrado = i;
-    }
-    return posicionEncontrado;
-}
-*/
 const songRepository = {
 
     async findAll() {
@@ -58,6 +32,7 @@ const songRepository = {
 
     async create(newSong) {
         const theSong = new Song({
+            _id : new mongoose.Types.ObjectId(),
             title : newSong.title,
             artist: newSong.artist,
             album:newSong.album,
@@ -76,6 +51,11 @@ const songRepository = {
         } else
             return undefined;
     },
+
+    // Versión del anterior
+    update(modifiedSong) {
+        return this.update(modifiedSong.id, modifiedSong);
+    }, 
 
     // Borrar una canción por su ID
     async delete(id) {

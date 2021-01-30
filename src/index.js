@@ -30,8 +30,7 @@ morganBody(app);
 
 app.use((req, res, next) => {
   req.context = {
-    models,
-    me: models.songs.songRepository.findById(1)
+    models
   };
   next();
 });
@@ -59,7 +58,7 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
     console.log(`Conexión correcta a la base de datos en la URI ${process.env.DB_URI}`);
     app.listen(process.env.PORT, () =>
       console.log(
-        `¡Aplicación de ejemplo escuchando en el puerto ${process.env.PORT}!`
+        `¡Aplicación escuchando en el puerto ${process.env.PORT}!`
       )
     );
   }
@@ -70,6 +69,4 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
 app.use(passport.initialize());
 
 console.log("Hola 👋 Node.js.");
-//console.log(process.env.MI_PASSWORD);
-console.log(process.env.PORT);
 

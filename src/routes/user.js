@@ -8,13 +8,9 @@ const router = Router();
 
 router.get('/', UserController.todosLosUsuarios)
 
-/*
-router.get('/:id', [
-    param('id').isInt().withMessage('ID debe ser un número entero')
-],
-validar,
-UserController.usuarioPorId);
 
+router.get('/:id',UserController.usuarioPorId);
+/*
 router.post('/', [
     body('username').isLength({min: 5}).withMessage('La longitud mínima del nombre de usuario son 5 caracteres'),
     body('fullname').exists(),
@@ -31,17 +27,9 @@ router.post('/', [
 validar, 
 UserController.nuevoUsuario);
 
-
-router.put('/:id', [
-    param('id').isInt().withMessage('ID debe ser un número entero')
-],
-validar,
-UserController.editarUsuario);
 */
-router.delete('/:id', [
-    param('id').isInt().withMessage('ID debe ser un número entero')
-],
-validar,
-UserController.eliminarUsuario);
+router.put('/:id', UserController.editarUsuario);
+
+router.delete('/:id',UserController.eliminarUsuario);
 
 export default router;
