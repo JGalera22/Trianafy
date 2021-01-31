@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
@@ -23,6 +22,11 @@ const emailExists = async (email) => {
 
 }
 
+const usernameExists = async (username) => {
+    const result = await User.countDocuments({ username: username }).exec();
+    return result > 0;
+}
+
 const userRepository = {
 
     // Devuelve todos los usuarios del repositorio
@@ -31,14 +35,24 @@ const userRepository = {
         return result;
     },
     // Devuelve un usuario por su Id
-    async findById(id) {
-       const result = await User.findById(id).exec();
+    async findById(_id) {
+       const result = await User.findById(_id).exec();
        return result != null ? result : undefined;
     },
+
+    //Encuentra un usuario con su username
+    
+    async findByUsername(username) {
+        let result = await User.find(user => user.username == username);
+        return result != null ? result : undefined;   
+     },
+     
     // Inserta un nuevo usuario y devuelve el usuario insertado
     async create(newUser) {
         const theUser = new User({
+            _id : new mongoose.Types.ObjectId(),
             username : newUser.username,
+            fullname: newUser.fullname,
             email: newUser.email
         });
         const result = await theUser.save();
@@ -46,8 +60,8 @@ const userRepository = {
 
     },
     // Actualiza un usuario identificado por su ID
-    async updateById(id, modifiedUser) {
-        const userSaved = await User.findById(id);
+    async updateById(_id, modifiedUser) {
+        const userSaved = await User.findById(_id);
 
         if (userSaved != null) {
             return await Object.assign(userSaved, modifiedUser).save();
@@ -61,8 +75,8 @@ const userRepository = {
         return this.update(modifiedUser.id, modifiedUser);
     }, 
 
-    async delete(id) {
-        await User.findByIdAndRemove(id).exec();
+    async delete(_id) {
+        await User.findByIdAndRemove(_id).exec();
     }
 
 }
@@ -71,5 +85,6 @@ const userRepository = {
 export  {
     User,
     userRepository,
-    emailExists
+    emailExists,
+    usernameExists
 }

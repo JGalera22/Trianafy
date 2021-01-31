@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { UserController } from '../controladores/user';
 import { param, body } from 'express-validator';
 import { validar } from '../middlewares/validacion';
-import { emailExists } from '../models/users';
+//mport { emailExists } from '../models/users';
+import { token } from '../services/passport/index';
 
 const router = Router();
 
@@ -11,17 +12,20 @@ router.get('/', UserController.todosLosUsuarios)
 
 router.get('/:id',[
     param('id').isString().withMessage('ID debe ser un string')
-], validar,
+],token(),
+ validar,
 UserController.usuarioPorId);
 
 router.put('/:id',[
     param('id').isString().withMessage('ID debe ser un string')
-], validar,
- UserController.editarUsuario);
+],token(),
+validar,
+UserController.editarUsuario);
 
 router.delete('/:id',[
     param('id').isString().withMessage('ID debe ser un string')
-], validar,
+],token(),
+validar,
 UserController.eliminarUsuario);
 
 export default router;
