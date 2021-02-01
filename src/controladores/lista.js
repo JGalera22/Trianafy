@@ -1,6 +1,7 @@
 import { mongoose } from 'mongoose';
 import { Lista, listaRepository } from '../models/listas';
 import { songRepository } from '../models/songs';
+import { AuthController } from '../controladores/auth'
 
 const ListaController = {
 
@@ -59,20 +60,20 @@ const ListaController = {
 
     nuevaLista : async (req, res) => {
         let listaCreada = await listaRepository.create({
+            user: await req.user,
             name: req.body.name, 
-            description: req.body.description, 
-            user_id: req.body.userId
+            description: req.body.description           
         } 
             );
         res.status(201).json(listaCreada);
+        //console.log('hola')
+        console.log(req.user)
     },
 
     addCancionLista: async (req, res)=>{
         let song = await songRepository.findById(req.params.id_song);
-        //console.log(song);
         if(song != undefined){
             let lista = await listaRepository.findById(req.params.id_lista);
-            //console.log(lista);
             if (lista != undefined){
                 console.log(song);
                 lista.songs.push(song._id);
@@ -80,7 +81,7 @@ const ListaController = {
                 res.json(await listaRepository.findById(lista._id));
             }else{
                 res.status(400).json({
-                    mensaje: `No existe ninguna lista de reproducción con el ID: ${req.s.id_lista}` 
+                    mensaje: `No existe ninguna lista de reproducción con el ID: ${req.params.id_lista}` 
                 });
             }
         }else{

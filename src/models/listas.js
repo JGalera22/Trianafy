@@ -6,7 +6,8 @@ const listaSchema = new Schema({
     _id: Schema.Types.ObjectId,
     name: String,
     description: String,
-    user_id:{
+    
+    user:{
         type: mongoose.ObjectId,
         ref: 'User'
     },
@@ -26,7 +27,6 @@ const listaRepository = {
     async findAll() {
         return await Lista
             .find()
-            .populate('lista', 'name')
             .populate('songs', 'title')
             .exec();
     },
@@ -34,7 +34,6 @@ const listaRepository = {
      async findById(_id) {
         return await Lista
             .findById(_id)
-            .populate('lista')
             .populate('songs')
             .exec();
     },
@@ -45,9 +44,10 @@ const listaRepository = {
             _id : new mongoose.Types.ObjectId(),
             name : newLista.name,
             description: newLista.description,
-            user_id: newLista.user_id,
+            //user_id: newLista.user_id,
+            user: newLista.user,
             songs: newLista.songs
-        });
+        });   
         const result = await theLista.save();
         return result;
      },

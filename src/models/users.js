@@ -43,7 +43,7 @@ const userRepository = {
     //Encuentra un usuario con su username
     
     async findByUsername(username) {
-        let result = await User.find(user => user.username == username);
+        let result = await User.findOne({"username": username}).exec();
         return result != null ? result : undefined;   
      },
      
@@ -53,7 +53,8 @@ const userRepository = {
             _id : new mongoose.Types.ObjectId(),
             username : newUser.username,
             fullname: newUser.fullname,
-            email: newUser.email
+            email: newUser.email,
+            password: newUser.password
         });
         const result = await theUser.save();
         return result; 

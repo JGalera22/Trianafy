@@ -30,7 +30,8 @@ validar, ListaController.buscarCancionLista);
 router.post('/', [
     body('name').exists().withMessage('Debe proporcionarse un nombre a la lista'),
     body('description').exists().withMessage('Debe proporcionarse una descripción'),
-    body('user_id').exists().withMessage('Debe proporcionarse una Id de ususario'),
+    //body('user').exists().withMessage('Debe proporcionarse una Id de usuario'),
+    //body('user_id').not().exists().withMessage('No es necesario que proporcione un ID de usuario'),
     body('id').not().exists().withMessage('No es necesario que proporcione un ID; este se asignará automáticamente')
 ],token(),
 validar, 

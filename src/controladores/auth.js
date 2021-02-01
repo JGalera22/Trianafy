@@ -11,6 +11,7 @@ const AuthController = {
         let usuarioCreado = await userRepository.create(
             {
                 username: req.body.username, 
+                fullname: req.body.fullname,
                 email: req.body.email,
                 password: bcrypt.hashSync(req.body.password, parseInt(process.env.BCRYPT_ROUNDS))
             });
@@ -20,17 +21,13 @@ const AuthController = {
         });
     },
     login: (req, res, next) => {
-        // Dado que la mitad del esfuerzo lo hace la función password del servicio passport
-        // Aquí tan solo tenemos que preocuparnos de generar y devolver el token
+
         const token = JwtService.sign(req.user);
         res.status(201).json({
             user: req.user,
             token: token
         });
     }
-    
-
-
 }
 
 export {

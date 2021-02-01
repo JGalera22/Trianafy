@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { UserController } from '../controladores/user';
 import { param, body } from 'express-validator';
 import { validar } from '../middlewares/validacion';
-//mport { emailExists } from '../models/users';
 import { token } from '../services/passport/index';
 
 const router = Router();
