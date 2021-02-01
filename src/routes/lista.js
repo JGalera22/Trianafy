@@ -59,7 +59,8 @@ validar,
 ListaController.eliminarLista);
 
 router.delete('/:id_lista/songs/:id_song',[
-    param('id').isString().withMessage('ID debe ser un string')
+    param('id_lista').isString().withMessage('ID de lista debe ser un string'),
+    param('id_song').isString().withMessage('ID de canción debe ser un string')
 ],token(),
 validar, ListaController.delCancionLista);
 
