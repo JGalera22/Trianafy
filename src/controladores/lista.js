@@ -1,7 +1,5 @@
-import { mongoose } from 'mongoose';
 import { Lista, listaRepository } from '../models/listas';
 import { songRepository } from '../models/songs';
-import { AuthController } from '../controladores/auth'
 
 const ListaController = {
 

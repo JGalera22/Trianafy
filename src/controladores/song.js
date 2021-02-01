@@ -5,6 +5,7 @@ const SongController = {
 
     todasLasCanciones : async (req, res) => {
         const data = await songRepository.findAll();
+        console.log(req.user)
         if (Array.isArray(data) && data.length > 0) 
             res.json(data);
         else

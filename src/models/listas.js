@@ -27,6 +27,7 @@ const listaRepository = {
     async findAll() {
         return await Lista
             .find()
+            .populate('users', 'username')
             .populate('songs', 'title')
             .exec();
     },
@@ -34,6 +35,7 @@ const listaRepository = {
      async findById(_id) {
         return await Lista
             .findById(_id)
+            .populate('users')
             .populate('songs')
             .exec();
     },
