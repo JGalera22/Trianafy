@@ -10,6 +10,9 @@ import mongoose from "mongoose"
 // Imports de componentes del API
 import models from './models';
 import routes from './routes';
+import { User } from "./models/users";
+import { Song } from "./models/songs";
+import { Lista } from "./models/listas";
 
 // Instanciación de la aplicación de Express
 const app = express();
@@ -62,6 +65,90 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
       )
     );
   }
+
+  /***********  DATOS DE PRUEBA  *********** */
+  /*
+
+  //Users
+
+  let jesusUser = new User({
+		_id: new mongoose.Types.ObjectId(),
+		usernaname: 'Jesus',
+		fullname: 'Jesús de la Higuera',
+		email: 'jesus@email.com',
+		password: '1234',
+  });
+
+  jesusUser.save(function(err) {
+		if (err) throw err;
+		console.log('Author successfully saved.');
+  });
+
+  //Songs
+
+  var centuriesSong = new Song({
+    _id: new mongoose.Types.ObjectId(),
+    title: "Centuries",
+    artist: "Fall out Boys",
+    album: "B",
+    year: "2015"
+  });
+  
+  centuriesSong.save(function(err) {
+    if (err) throw err;
+    console.log('Songs Centuries successfully saved.');
+  });
+
+  var helloSong = new Song({
+    _id: new mongoose.Types.ObjectId(),
+    title: "Hello",
+    artist: "Adelle",
+    album: "B",
+    year: "2018"
+  });
+  
+  helloSong.save(function(err) {
+    if (err) throw err;
+    console.log('Song Hello successfully saved.');
+  });
+
+  var fightSong = new Song({
+    _id: new mongoose.Types.ObjectId(),
+    title: "Fight Back",
+    artist: "NEFEX",
+    album: "C",
+    year: "2015"
+  });
+  
+  fightSong.save(function(err) {
+    if (err) throw err;
+    console.log('Song Fight Back successfully saved.');
+  });
+
+  
+
+
+  //Lista
+    
+  let centuriesLista = new Lista({
+    _id: new mongoose.Types.ObjectId(),
+    name: 'Centuries',
+    description: 'Música Épica',
+    user: jesusUser,
+    songs: [
+      centuriesSong,
+      helloSong,
+      fightSong
+    ]
+  })
+
+  centuriesLista.save(function(err) {
+		if (err) throw err;
+		console.log('lista successfully saved.');		
+  });
+  
+  */
+   /***********  FIN DATOS DE PRUEBA  *********** */
 
 });
 
